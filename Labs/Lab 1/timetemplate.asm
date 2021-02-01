@@ -24,7 +24,7 @@ main:
 	syscall
 	nop
 	# wait a little
-	li	$a0,2
+	li	$a0,1000
 	jal	delay
 	nop
 	# call tick
@@ -93,20 +93,45 @@ hexasc:
 		jr $ra			# Jump to return adress that was linked with function call		
 		nop			# delay slot filler
 
-# Stub of the delay subroutine
+# Stub of the delay subroutine (Deprecated)
+# delay:
+#	jr $ra
+#	nop
+	
+# New delay funtion (Task 4)
 delay:
-	jr $ra
+	PUSH	($ra)
+	move 	$t1, $a0			# Store argument in temp so we can use it
+	
+	while:
+		ble	$t1, $zero, exit	# Check if ms > 0
+		sub	$t1, $t1, 1 		# ms--;
+		nop
+		
+	li	$t2, 0				# int i	= 0		
+	for:
+		bge	$t2, 28, while		# Check if i < 28 (Can be changed for speed), then jump or continue
+		add	$t2, $t2, 1		# i++;
+		j	for			# Go to next iteration of for loop
+		nop
+		
+	j	while				# Go back to next iteration in while loop
 	nop
-
+			
+	exit:					# End of subroutine
+		POP	($ra)			# Restore the return adress
+		jr	$ra			# Jump back to caller
+		nop
+		
 # Converts time-info into a string of printable characters, with a null-byte as an end-of-string-marker
 # $a0 contains the adress to the section of memory where we will store the result.
 # $a1 conains the NBCD-encoded time info, where we only consider the 16 LSB.
 time2string:
-	PUSH ($s1)				# Save contents of s1 to restore it after the function ends
-	PUSH ($ra)				# Save the return adress on the stack
+	PUSH	($s1)				# Save contents of s1 to restore it after the function ends
+	PUSH	($ra)				# Save the return adress on the stack
 	
-	move $s1, $a0				# Move contents of $a0 to $s1 so we can work with it
-	PUSH ($a0)				# Save the contents of $a0 so we can restore it later 
+	move	$s1, $a0				# Move contents of $a0 to $s1 so we can work with it
+	PUSH	($a0)				# Save the contents of $a0 so we can restore it later 
 						# and use it for hexasc now
 	
 	# First digit
@@ -153,9 +178,9 @@ time2string:
 						# points to
 	
 	# End of subroutine. Restoring registers and jumping back to caller.																																																																																										
-	POP ($a0)
-	POP ($ra)
-	POP ($s1)
+	POP	($a0)
+	POP	($ra)
+	POP	($s1)
 	
  	jr 	$ra
  	nop																																																																																
