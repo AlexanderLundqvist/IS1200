@@ -105,12 +105,13 @@ delay:
 	
 	while:
 		ble	$t1, $zero, exit	# Check if ms > 0
-		sub	$t1, $t1, 1 		# ms--;
 		nop
+		sub	$t1, $t1, 1 		# ms--;
 		
 	li	$t2, 0				# int i	= 0		
 	for:
 		bge	$t2, 28, while		# Check if i < 28 (Can be changed for speed), then jump or continue
+		nop
 		add	$t2, $t2, 1		# i++;
 		j	for			# Go to next iteration of for loop
 		nop
