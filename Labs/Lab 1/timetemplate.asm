@@ -24,7 +24,7 @@ main:
 	syscall
 	nop
 	# wait a little
-	li	$a0,1000
+	li	$a0,-1
 	jal	delay
 	nop
 	# call tick
@@ -110,9 +110,9 @@ delay:
 		
 	li	$t2, 0				# int i	= 0		
 	for:
-		bge	$t2, 28, while		# Check if i < 28 (Can be changed for speed), then jump or continue
+		bge	$t2, 1, while		# Check if i < 28 (Can be changed for speed), then jump or continue
 		nop
-		add	$t2, $t2, 1		# i++;
+		addi	$t2, $t2, 1		# i++;
 		j	for			# Go to next iteration of for loop
 		nop
 		
@@ -131,9 +131,8 @@ time2string:
 	PUSH	($s1)				# Save contents of s1 to restore it after the function ends
 	PUSH	($ra)				# Save the return adress on the stack
 	
-	move	$s1, $a0				# Move contents of $a0 to $s1 so we can work with it
-	PUSH	($a0)				# Save the contents of $a0 so we can restore it later 
-						# and use it for hexasc now
+	move	$s1, $a0			# Move contents of $a0 to $s1 so we can work with it
+
 	
 	# First digit
 	andi 	$t1, $a1, 0xf000		# Masking out bit from index 15 to 12
@@ -179,7 +178,6 @@ time2string:
 						# points to
 	
 	# End of subroutine. Restoring registers and jumping back to caller.																																																																																										
-	POP	($a0)
 	POP	($ra)
 	POP	($s1)
 	
