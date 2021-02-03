@@ -13,7 +13,7 @@ loop:
 
 	addi	$s0,$s0,3	# what happens if the constant is changed?
 	
-	li	$t0,0x5b	# Load in the character that comes after Z
+	li	$t0,0x5a	# Load in the character Z
 	ble	$s0,$t0,loop	# This line checks if we have reached Z (Will go to stop if We already have printed Z)
 	nop			# delay slot filler (just in case)
 

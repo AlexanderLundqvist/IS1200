@@ -62,7 +62,7 @@ delay:
 	for:
 		bge	$t2, 28, while		# Check if i < 28 (Can be changed for speed), then jump or continue
 		nop
-		add	$t2, $t2, 1		# i++;
+		addi	$t2, $t2, 1		# i++;
 		j	for			# Go to next iteration of for loop
 		nop
 		

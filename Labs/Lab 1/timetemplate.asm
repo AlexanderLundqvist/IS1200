@@ -24,7 +24,7 @@ main:
 	syscall
 	nop
 	# wait a little
-	li	$a0,-1
+	li	$a0,1000
 	jal	delay
 	nop
 	# call tick
@@ -110,7 +110,7 @@ delay:
 		
 	li	$t2, 0				# int i	= 0		
 	for:
-		bge	$t2, 1, while		# Check if i < 28 (Can be changed for speed), then jump or continue
+		bge	$t2, 28, while		# Check if i < parameter (Can be changed for speed), then jump or continue
 		nop
 		addi	$t2, $t2, 1		# i++;
 		j	for			# Go to next iteration of for loop
@@ -137,19 +137,24 @@ time2string:
 	# First digit
 	andi 	$t1, $a1, 0xf000		# Masking out bit from index 15 to 12
 	srl 	$a0, $t1, 12			# Shifting the bits to lowest position and store it in $a0 for hexasc
+	PUSH	($a0)
+	PUSH	($a1)
 	jal	hexasc				# Calling the hexasc that will transform the decimal into hexadecimal
 	nop
 	sb 	$v0, 0($s1)		 	# Save the return value from hexasc in the first byte location $s1 
-						# points to
-						
+	POP	($a1)				# points to
+	POP	($a0)					
 	
 	# Second digit
 	andi 	$t1, $a1, 0x0f00		# Masking out bit from index 11 to 8
 	srl 	$a0, $t1, 8			# Shifting the bits to lowest position and store it in $a0 for hexasc
+	PUSH	($a0)
+	PUSH	($a1)
 	jal	hexasc				# Calling the hexasc that will transform the decimal into hexadecimal
 	nop
 	sb 	$v0, 1($s1)		 	# Save the return value from hexasc in the second byte location $s1 
-						# points to
+	POP	($a1)				# points to
+	POP	($a0)					
 	
 	# Adding the colon
 	li 	$t1, 0x3a			# Loading the ASCII code for colon
@@ -159,18 +164,24 @@ time2string:
 	# Third digit
 	andi 	$t1, $a1, 0x00f0		# Masking out bit from index 7 to 4
 	srl 	$a0, $t1, 4			# Shifting the bits to lowest position and store it in $a0 for hexasc
+	PUSH	($a0)
+	PUSH	($a1)
 	jal	hexasc				# Calling the hexasc that will transform the decimal into hexadecimal
 	nop
 	sb 	$v0, 3($s1)		 	# Save the return value from hexasc in the fourth byte location $s1 
-						# points to
+	POP	($a1)				# points to
+	POP	($a0)				
 	
 	# Forth digit
 	andi 	$t1, $a1, 0x000f		# Masking out bit from index 3 to 0
 	move 	$a0, $t1			# No need for shifting, just move it to the argument.
+	PUSH	($a0)
+	PUSH	($a1)
 	jal	hexasc				# Calling the hexasc that will transform the decimal into hexadecimal
 	nop
 	sb 	$v0, 4($s1)		 	# Save the return value from hexasc in the fifth byte location $s1 
-						# points to
+	POP	($a1)				# points to
+	POP	($a0)				
 																										
 	# Adding the NUL byte
 	li	$t1, 0x00			# Loading the ASCII code for NUL
