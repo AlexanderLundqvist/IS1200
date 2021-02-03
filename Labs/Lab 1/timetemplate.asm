@@ -24,7 +24,7 @@ main:
 	syscall
 	nop
 	# wait a little
-	li	$a0,1000
+	li	$a0,500
 	jal	delay
 	nop
 	# call tick
@@ -207,4 +207,4 @@ time2string:
 		sb	$t1, 5($s1)		# Save the X on the fifth 
 		li	$t1, 0x00		# Loading the ASCII code for NUL
 		sb 	$t1, 6($s1)		# Save the NUL byte the sixth byte location $s1 
-		j	exit_time2string	# points to	
+		j	exit_time2string	# Jump to exit function	

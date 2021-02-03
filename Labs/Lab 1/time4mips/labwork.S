@@ -81,26 +81,30 @@ time2string:
 	PUSH	$s1				# Save contents of s1 to restore it after the function ends
 	PUSH	$ra				# Save the return adress on the stack
 	
-	move	$s1, $a0				# Move contents of $a0 to $s1 so we can work with it
-	PUSH	$a0				# Save the contents of $a0 so we can restore it later 
-						# and use it for hexasc now
+	move	$s1, $a0			# Move contents of $a0 to $s1 so we can work with it
+
 	
 	# First digit
 	andi 	$t1, $a1, 0xf000		# Masking out bit from index 15 to 12
 	srl 	$a0, $t1, 12			# Shifting the bits to lowest position and store it in $a0 for hexasc
+	PUSH	$a0
+	PUSH	$a1
 	jal	hexasc				# Calling the hexasc that will transform the decimal into hexadecimal
 	nop
 	sb 	$v0, 0($s1)		 	# Save the return value from hexasc in the first byte location $s1 
-						# points to
-						
+	POP	$a1				# points to
+	POP	$a0					
 	
 	# Second digit
 	andi 	$t1, $a1, 0x0f00		# Masking out bit from index 11 to 8
 	srl 	$a0, $t1, 8			# Shifting the bits to lowest position and store it in $a0 for hexasc
+	PUSH	$a0
+	PUSH	$a1
 	jal	hexasc				# Calling the hexasc that will transform the decimal into hexadecimal
 	nop
 	sb 	$v0, 1($s1)		 	# Save the return value from hexasc in the second byte location $s1 
-						# points to
+	POP	$a1				# points to
+	POP	$a0					
 	
 	# Adding the colon
 	li 	$t1, 0x3a			# Loading the ASCII code for colon
@@ -110,18 +114,24 @@ time2string:
 	# Third digit
 	andi 	$t1, $a1, 0x00f0		# Masking out bit from index 7 to 4
 	srl 	$a0, $t1, 4			# Shifting the bits to lowest position and store it in $a0 for hexasc
+	PUSH	$a0
+	PUSH	$a1
 	jal	hexasc				# Calling the hexasc that will transform the decimal into hexadecimal
 	nop
 	sb 	$v0, 3($s1)		 	# Save the return value from hexasc in the fourth byte location $s1 
-						# points to
+	POP	$a1				# points to
+	POP	$a0				
 	
 	# Forth digit
 	andi 	$t1, $a1, 0x000f		# Masking out bit from index 3 to 0
 	move 	$a0, $t1			# No need for shifting, just move it to the argument.
+	PUSH	$a0
+	PUSH	$a1
 	jal	hexasc				# Calling the hexasc that will transform the decimal into hexadecimal
 	nop
 	sb 	$v0, 4($s1)		 	# Save the return value from hexasc in the fifth byte location $s1 
-						# points to
+	POP	$a1				# points to
+	POP	$a0
 																										
 	# Adding the NUL byte
 	li	$t1, 0x00			# Loading the ASCII code for NUL
@@ -129,7 +139,6 @@ time2string:
 						# points to
 	
 	# End of subroutine. Restoring registers and jumping back to caller.																																																																																										
-	POP	$a0
 	POP	$ra
 	POP	$s1
 	
