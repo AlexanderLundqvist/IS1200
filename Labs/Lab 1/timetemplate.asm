@@ -104,13 +104,13 @@ delay:
 	move 	$t1, $a0			# Store argument in temp so we can use it
 	
 	while:
-		ble	$t1, $zero, exit	# Check if ms > 0
+		ble	$t1, $zero, exit_delay	# Check if ms > 0
 		nop
 		sub	$t1, $t1, 1 		# ms--;
 		
 	li	$t2, 0				# int i	= 0		
 	for:
-		bge	$t2, 28, while		# Check if i < parameter (Can be changed for speed), then jump or continue
+		bge	$t2, 1, while		# Check if i < parameter (Can be changed for speed), then jump or continue
 		nop
 		addi	$t2, $t2, 1		# i++;
 		j	for			# Go to next iteration of for loop
@@ -119,7 +119,7 @@ delay:
 	j	while				# Go back to next iteration in while loop
 	nop
 			
-	exit:					# End of subroutine
+	exit_delay:					# End of subroutine
 		POP	($ra)			# Restore the return adress
 		jr	$ra			# Jump back to caller
 		nop
@@ -181,16 +181,30 @@ time2string:
 	nop
 	sb 	$v0, 4($s1)		 	# Save the return value from hexasc in the fifth byte location $s1 
 	POP	($a1)				# points to
-	POP	($a0)				
-																										
+	POP	($a0)
+	
+	# Check if a minute has passed
+	andi 	$t1, $a1, 0x00ff			
+	beq 	$t1, 0x0000, addx
+																																																			
+	
 	# Adding the NUL byte
 	li	$t1, 0x00			# Loading the ASCII code for NUL
 	sb 	$t1, 5($s1)		 	# Save the return value from hexasc in the sixth byte location $s1 
-						# points to
+	j	exit_time2string		# points to
 	
-	# End of subroutine. Restoring registers and jumping back to caller.																																																																																										
-	POP	($ra)
-	POP	($s1)
+	# End of subroutine. Restoring registers and jumping back to caller.
+	exit_time2string:																																																																																										
+		POP	($ra)
+		POP	($s1)
 	
- 	jr 	$ra
- 	nop																																																																																
+ 		jr 	$ra
+ 		nop
+ 	
+ 	# Subroutine to add an X in the output when a minute has passed																																																																																																																																																														
+	addx:
+		li	$t1, 0x58		# Load in the ASCII value for X
+		sb	$t1, 5($s1)		# Save the X on the fifth 
+		li	$t1, 0x00		# Loading the ASCII code for NUL
+		sb 	$t1, 6($s1)		# Save the NUL byte the sixth byte location $s1 
+		j	exit_time2string	# points to	
