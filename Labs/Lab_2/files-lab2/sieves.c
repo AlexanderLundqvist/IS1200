@@ -48,7 +48,7 @@ void print_sieves(int input){
     // Initialize the array we will work with
     int array_size = input - 2; // -1 for correct indexing, -1 for skipping 1
     // Allocate memory for the array since it is dynamic
-    int *numbers = malloc (sizeof (int) * array_size);
+    char numbers[array_size];
 
     // Populate the array with 1's (True values)
     for(int i = 0; i < array_size; i++){
