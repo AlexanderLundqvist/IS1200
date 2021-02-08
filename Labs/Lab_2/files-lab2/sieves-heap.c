@@ -14,6 +14,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
+#include <time.h> // To measure execution time
 
 #define COLUMNS 6
 
@@ -36,10 +37,10 @@ void print_sieves(int input){
     int array_size = input - 1; // -1 for correct indexing
     // Allocate memory for the array since it is dynamic
     // malloc allocates memory in the heap
-    int *numbers = malloc (sizeof (char) * array_size);
+    char *numbers = malloc (sizeof (char) * array_size);
 
     // Populate the array with 1's (True values)
-    for(int entry = 0; entry < array_size; entry++){
+    for(int entry = 0; entry <= array_size; entry++){
       numbers[entry] = 1;
     }
 
@@ -75,8 +76,12 @@ int main(int argc, char *argv[]){
   else
     printf("Please state an interger number.\n"); */
 
-  // Comment out the line bellow for using input in terminal
-  print_sieves(105);
-
+  // The code for time measurement is from
+  // https://stackoverflow.com/questions/5248915/execution-time-of-c-program
+  clock_t begin = clock();
+  print_sieves(40000000);
+  clock_t end = clock();
+  double time_spent = (double)(end - begin) / CLOCKS_PER_SEC;
+  printf("\nExecuted in: %lf seconds\n", time_spent);
   return 0;
 }

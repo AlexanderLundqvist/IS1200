@@ -69,7 +69,7 @@ int main()
   *p = 0x1234abcd; /* It starts to get interesting... */
 
   savebyte( "AM14: cs[0]", &cs[0] );
-  savebyte( "AM15: cs[1]", &cs[1] ); 
+  savebyte( "AM15: cs[1]", &cs[1] );
   savebyte( "AM16: cs[2]", &cs[2] );
   savebyte( "AM17: cs[3]", &cs[3] );
 

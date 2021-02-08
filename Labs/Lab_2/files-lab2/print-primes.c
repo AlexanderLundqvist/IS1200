@@ -66,7 +66,13 @@ int main(int argc, char *argv[]){
     print_primes(atoi(argv[1]));
   else
     printf("Please state an interger number.\n"); */
-  print_primes(105);
 
+  // The code for time measurement is from
+  // https://stackoverflow.com/questions/5248915/execution-time-of-c-program
+  clock_t begin = clock();
+  print_sieves(40000000);
+  clock_t end = clock();
+  double time_spent = (double)(end - begin) / CLOCKS_PER_SEC;
+  printf("\nExecuted in: %lf seconds\n", time_spent);
   return 0;
 }
