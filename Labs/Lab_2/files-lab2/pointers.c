@@ -1,4 +1,9 @@
-
+/*
+ sieves.c
+ By Alexander Lundqvist
+ Last modified: 2020-02-05
+ This file is in the public domain.
+*/
 
 
 #include <stdio.h>
@@ -18,9 +23,9 @@ void printlist(const int* lst){
 }
 
 void endian_proof(const char* c){
-  printf("\nEndian experiment: 0x%02x,0x%02x,0x%02x,0x%02x\n", 
+  printf("\nEndian experiment: 0x%02x,0x%02x,0x%02x,0x%02x\n",
          (int)*c,(int)*(c+1), (int)*(c+2), (int)*(c+3));
-  
+
 }
 
 int main(void){

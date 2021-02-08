@@ -23,7 +23,7 @@ int column_count = 0;
 void print_number(int number){
   printf("%10d ", number);
   column_count++;
-  if(column_count%COLUMNS == 0){
+  if(column_count%COLUMNS == 0){ // Every 6th entry will yield 0
     printf("\n");
   }
 }
@@ -33,29 +33,31 @@ void print_number(int number){
 void print_sieves(int input){
 
     // Initialize the array we will work with
-    int array_size = input - 2; // -1 for correct indexing, -1 for skipping 1
+    int array_size = input - 1; // -1 for correct indexing
     // Allocate memory for the array since it is dynamic
     // malloc allocates memory in the heap
-    int *numbers = malloc (sizeof (int) * array_size);
+    int *numbers = malloc (sizeof (char) * array_size);
 
     // Populate the array with 1's (True values)
-    for(int i = 0; i < array_size; i++){
-      numbers[i] = 1;
+    for(int entry = 0; entry < array_size; entry++){
+      numbers[entry] = 1;
     }
 
     // The algorithm starts here!
+    // Check the factors up to the square of the input, since that is
+    // the last number that can be squared to produce the input.
     for(int i = 2; i <= (int) sqrt(input); i++){
-      if(numbers[i] == 1){
-        for(int j = i*2; j <= input; j+=i){
-          numbers[j] = 0;
+      if(numbers[i] == 1){ // This is to check if we already covered a number
+        for(int j = i*i; j <= input; j+=i){ // For every multiple of that number
+          numbers[j] = 0; // Mark it as non-prime
         }
       }
     }
 
     // Printing out the true values from the array
-    for(int i = 0; i <= array_size; i++){
+    for(int i = 2; i <= array_size; i++){
       if(numbers[i] == 1){
-        print_number(i + 2);
+        print_number(i);
       }
     }
 
