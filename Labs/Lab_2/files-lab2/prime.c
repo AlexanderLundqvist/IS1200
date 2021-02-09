@@ -13,7 +13,7 @@ int is_prime(int n){
   int c; // Counter
 
   for(c=2; c<=n-1; c++){ // Se ifall parametern går att dela jämt på något
-      if(n%c==0){        // heltal c < p. Om det stämmer return 0.
+      if(n%c==0){        // heltal c < n. Om det stämmer return 0.
         return 0;
       }
   }
