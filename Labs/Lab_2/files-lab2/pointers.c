@@ -10,9 +10,11 @@
 
 char* text1 = "This is a string.";
 char* text2 = "Yet another thing.";
-int  list1[30];  // Needs to be int to get the hex value
-int  list2[30];  // and printlist also calls for int array
-int   count = 0; // Global count defined in memory
+// Array size 20 since asm specifies 80 bytes of storage and ints have 4 byte size
+// -> 80/4 = 20
+int  list1[20];  // Needs to be int to get the hex value
+int  list2[20];  // and printlist also calls for int array
+int  count = 0; // Global count defined in memory
 
 void copycodes(char* text, int* list, int* count){
   // Dereference the pointer in text to get the value at
@@ -63,6 +65,12 @@ void endian_proof(const char* c){
 
 }
 
+void endian_proof2(const char* c){
+  printf("\nEndian experiment 2: 0x%02x,0x%02x,0x%02x,0x%02x\n",
+         (int)*(c+3),(int)*(c+2), (int)*(c+1), (int)*c);
+
+}
+
 int main(void){
   work();
 
@@ -73,4 +81,5 @@ int main(void){
   printf("\nCount = %d\n", count);
 
   endian_proof((char*) &count);
+  endian_proof2((char*) &count);
 }
