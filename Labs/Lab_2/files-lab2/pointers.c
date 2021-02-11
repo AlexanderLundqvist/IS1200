@@ -65,12 +65,6 @@ void endian_proof(const char* c){
 
 }
 
-void endian_proof2(const char* c){
-  printf("\nEndian experiment 2: 0x%02x,0x%02x,0x%02x,0x%02x\n",
-         (int)*(c+3),(int)*(c+2), (int)*(c+1), (int)*c);
-
-}
-
 int main(void){
   work();
 
@@ -81,5 +75,4 @@ int main(void){
   printf("\nCount = %d\n", count);
 
   endian_proof((char*) &count);
-  endian_proof2((char*) &count);
 }

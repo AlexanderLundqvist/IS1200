@@ -75,6 +75,37 @@ void print_sieves(int input){
         print_number(i);
       }
     }
+
+    // Surprise assignment. print out how many occurences of a length of 4
+    // between the primes.
+    int steps = 0;
+    int x = 0; // prime x < y
+    for(int y = 2; y <= array_size; y++){
+      if(numbers[y] == 1){ // When we get to next prime
+        if(y - x == 4){
+          steps++;
+        }
+        x = y; // assign x to y so we calculate from there next time
+      }
+    }
+
+
+
+  /*  while(m <= array_size){
+        int zeros = 0;
+        int y = x + 1;
+        while(numbers[y] == 0){
+          y++;
+          zeros++;
+        }
+        if(zeros == 3){
+          steps++;
+        }
+        x = y;
+    } */
+
+
+    printf("\n\nNumber of occurences with 4 steps between primes: %d\n", steps);
 }
 
 // 'argc' contains the number of program arguments, and
@@ -90,7 +121,7 @@ int main(int argc, char *argv[]){
   // The code for time measurement is from
   // https://stackoverflow.com/questions/5248915/execution-time-of-c-program
   clock_t begin = clock();
-  print_sieves(1000000);
+  print_sieves(105);
   clock_t end = clock();
   double time_spent = (double)(end - begin) / CLOCKS_PER_SEC;
   printf("\nExecuted in: %lf seconds\n", time_spent);
