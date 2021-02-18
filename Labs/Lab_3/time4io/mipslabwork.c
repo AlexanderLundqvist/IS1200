@@ -14,12 +14,13 @@
 #include <pic32mx.h>  /* Declarations of system-specific addresses etc */
 #include "mipslab.h"  /* Declarations for these labs */
 
-int mytime = 0x0001; // The starting time
+int mytime = 0x0001; // The starting time, needs to be 1 so ticks == leds
 
 char textstring[] = "text, more text, and even more text!";
 
 
-// We need to declare the pointers as volatile because
+// We need to declare the pointers as volatile because we want to avoid
+// unintentional compiler optimization that could render the pointers static
 volatile int *tris_E;
 volatile int *port_E;
 
@@ -34,6 +35,8 @@ void user_isr( void )
 void labinit( void )
 {
   // Cast their respective adress as they were declared as volatile
+  // TRISE contains the bits that determine if Port bits are input or output
+  // PORTE contains the data that decideds what input/output
   tris_E = (volatile int*) 0xbf886100; // Address of TRISE register
   port_E = (volatile int*) 0xbf886110; // Address of PORTE register
 
@@ -50,24 +53,33 @@ void labinit( void )
 
 void labwork( void )
 {
+  //
   int switches = getsw();
-	int button = getbtns();
+	int buttons = getbtns();
 
-  // Button 2
-  if(button == 1 || button == 3 || button == 5 || button == 7){
+  // The buttons need to have following if conditions since we want to be able
+  // to press several buttons at the same time. For example: Button 2 and 4
+  // would be 101 (5), and so we declare that 5 is a condition for both buttons
+  // since the code executes each button if-statement.
+
+  // Button 2 (001)
+  if(buttons == 1 || buttons == 3 || buttons == 5 || buttons == 7){
+    // Mask out the bits that represent 10th seconds
     mytime = mytime & 0xff0f;
+    // Take the value from switches, shift to correct position then add (OR) them
+    // to mytime. 
     mytime = (switches << 4) | mytime;
   }
 
-  // Button 3
-  if(button == 2 || button == 3 || button == 6 || button == 7){
+  // Button 3 (010)
+  if(buttons == 2 || buttons == 3 || buttons == 6 || buttons == 7){
     mytime = mytime & 0xf0ff;
     mytime = (switches << 8) | mytime;
 
   }
 
-  // Button 4
-  if(button == 4 || button == 5 || button == 6 || button == 7){
+  // Button 4 (100)
+  if(buttons == 4 || buttons == 5 || buttons == 6 || buttons == 7){
     mytime = mytime & 0x0fff;
     mytime = (switches << 12) | mytime;
 
