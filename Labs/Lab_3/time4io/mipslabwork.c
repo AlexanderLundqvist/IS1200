@@ -67,7 +67,7 @@ void labwork( void )
     // Mask out the bits that represent 10th seconds
     mytime = mytime & 0xff0f;
     // Take the value from switches, shift to correct position then add (OR) them
-    // to mytime. 
+    // to mytime.
     mytime = (switches << 4) | mytime;
   }
 
