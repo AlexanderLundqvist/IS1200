@@ -2,17 +2,20 @@
 
    This file written 2015 by Axel Isaksson,
    modified 2015, 2017 by F Lundevall
+	 modified 2021 by Alexander Lundqvist and Max Dern
 
-   Latest update 2017-04-21 by F Lundevall
+	 Latest update 2021-02-21 by Alexander Lundqvist and Max Dern
 
-   For copyright and licensing, see file COPYING */
+
+   For copyright and licensing, see file COPYING
+*/
 
 #include <stdint.h>   /* Declarations of uint_32 and the like */
 #include <pic32mx.h>  /* Declarations of system-specific addresses etc */
 #include "mipslab.h"  /* Declatations for these labs */
 
 int main(void) {
-        /*
+  /*
 	  This will set the peripheral bus clock to the same frequency
 	  as the sysclock. That means 80 MHz, when the microcontroller
 	  is running at 80 MHz. Changed 2017, as recommended by Axel.
@@ -55,13 +58,13 @@ int main(void) {
 	SPI2CONSET = 0x8000;
 
 	display_init();
-	display_string(0, "Lab 3");
-	display_string(1, "Testing IO");
-	display_string(2, "-----------");
-	display_string(3, "Welcome!");
+	display_string(0, "Project SNAKE");
+	display_string(1, "By Max and Alexander");
+	display_string(2, "");
+	display_string(3, "Enjoy!");
 	display_update();
 
-	display_image(96, icon);
+	display_image(96, icon); // Change?
 
 	labinit(); /* Do any lab-specific initialization */
 
