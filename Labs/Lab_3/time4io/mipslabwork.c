@@ -63,7 +63,7 @@ void labwork( void )
   // since the code executes each button if-statement.
 
   // Button 2 (001)
-  if(buttons == 1 || buttons == 3 || buttons == 5 || buttons == 7){
+  if(buttons & 1){
     // Mask out the bits that represent 10th seconds
     mytime = mytime & 0xff0f;
     // Take the value from switches, shift to correct position then add (OR) them
@@ -72,14 +72,14 @@ void labwork( void )
   }
 
   // Button 3 (010)
-  if(buttons == 2 || buttons == 3 || buttons == 6 || buttons == 7){
+  if(buttons & 2){
     mytime = mytime & 0xf0ff;
     mytime = (switches << 8) | mytime;
 
   }
 
   // Button 4 (100)
-  if(buttons == 4 || buttons == 5 || buttons == 6 || buttons == 7){
+  if(buttons & 4){
     mytime = mytime & 0x0fff;
     mytime = (switches << 12) | mytime;
 
