@@ -65,6 +65,12 @@ int main(void) {
 	display_update();
 
 	labinit(); /* Do any lab-specific initialization */
+	quicksleep(20000000);
+	display_string(0, "");
+	display_string(0, "");
+	display_string(0, "");
+	display_string(0, "");
+	display_update();
 
 	while( 1 )
 	{

@@ -16,6 +16,7 @@
 
 #define DISPLAY_WIDTH = 16; // Bytes or 8 bits = 8 pixels
 #define DISPLAY_HEIGHT = 4;
+#define DISPLAY_SIZE = DISPLAY_WIDTH * DISPLAY_HEIGHT;
 
 
 char textstring[] = "text, more text, and even more text!";
@@ -54,22 +55,19 @@ void game_loop( void )
 {
   int switches = getsw();
 	int button = getbtns();
-  /* Checking the timeout event flag for T2 ( bit 8 in IFS0) */
 
-  // AND with 0001 0000 0000, if the 8th bit is 1 then increment count
   if(IFS(0) & 0x100){
     timeoutcount++;
-    // Reset the event flag bit with the clear register
     IFSCLR(0) = 0x100;
   }
 
-  // The following statement only runs every 10th interrupt
   if(timeoutcount == 10){
 
     display_image(0, display);
-    display_update();
+    display_image(32, display);
+    display_image(64, display);
+    display_image(96, display);
 
-    // Reset the counter
     timeoutcount = 0;
 
   }

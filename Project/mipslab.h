@@ -38,7 +38,7 @@ void display_debug( volatile int * const addr );
 /* Project related code */
 
 /* Declare bitmap array containing the display */
-extern const uint8_t const display[128*32];
+extern const uint8_t const display[128*4]; // 128*4 Bytes for each pixel column
 
 /* End of project related code */
 
