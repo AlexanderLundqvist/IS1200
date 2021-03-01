@@ -35,6 +35,14 @@ void tick( unsigned int * timep );
 */
 void display_debug( volatile int * const addr );
 
+/* Project related code */
+
+/* Declare bitmap array containing the display */
+extern const uint8_t const display[128*32];
+
+/* End of project related code */
+
+
 /* Declare bitmap array containing font */
 extern const uint8_t const font[128*8];
 /* Declare bitmap array containing icon */

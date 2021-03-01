@@ -6,7 +6,6 @@
 
 	 Latest update 2021-02-21 by Alexander Lundqvist and Max Dern
 
-
    For copyright and licensing, see file COPYING
 */
 
@@ -57,20 +56,19 @@ int main(void) {
 	/* SPI2CON bit ON = 1; */
 	SPI2CONSET = 0x8000;
 
+	/* Introduction */
 	display_init();
-	display_string(0, "SNAKE");
-	display_string(1, "By Group 30");
+	display_string(0, "      SNAKE     ");
+	display_string(1, "   By Group 30  ");
 	display_string(2, "");
-	display_string(3, "Enjoy!");
+	display_string(3, "      Enjoy!   ");
 	display_update();
-
-	// display_image(96, icon); // Change?
 
 	labinit(); /* Do any lab-specific initialization */
 
 	while( 1 )
 	{
-	  labwork(); /* Do lab-specific things again and again */
+	  game_loop(); /* Do lab-specific things again and again */
 	}
 	return 0;
 }
