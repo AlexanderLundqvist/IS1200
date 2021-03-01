@@ -20,6 +20,7 @@ char textstring[] = "text, more text, and even more text!";
 
 volatile int *tris_E;
 volatile int *port_E;
+int diff = 500;
 
 int timeoutcount = 0;
 
@@ -89,6 +90,7 @@ void labwork( void )
     mytime = (switches << 12) | mytime;
 
   }
+  
 
   /* Checking the timeout event flag for T2 ( bit 8 in IFS0) */
 
@@ -100,11 +102,13 @@ void labwork( void )
     IFSCLR(0) = 0x100;
 
   }
+  
+  
 
   // The following statement only runs every 10th interrupt
   if(timeoutcount == 10){
-
-    // delay( 1000 );
+	
+    // delay( diff );
     time2string( textstring, mytime );
     display_string( 3, textstring );
 	display_image(96, icon);
@@ -116,4 +120,20 @@ void labwork( void )
     timeoutcount = 0;
 
   }
+}
+
+void difficulty(){			//Uses the switches 1-3 to set speed of the game
+int swt;
+if(swt = getsw()){
+	if(getsw() == 0x3)
+		diff =+ 50;
+	
+	if (getsw() = 0x2)
+		diff =+ 100;
+	
+	if	(getsw() = 0x1)
+		diff =+ 200;
+	}
+	
+
 }
