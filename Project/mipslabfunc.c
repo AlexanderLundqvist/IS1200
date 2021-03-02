@@ -23,6 +23,11 @@ static void num32asc( char * s, int );
 #define DISPLAY_TURN_OFF_VDD (PORTFSET = 0x40)
 #define DISPLAY_TURN_OFF_VBAT (PORTFSET = 0x20)
 
+int bike1x;
+int bike1y;
+int bike2x;
+int bike2y;
+
 /* quicksleep:
    A simple function to create a small delay.
    Very inefficient use of computing resources,
@@ -322,3 +327,93 @@ char * itoaconv( int num )
    * we must add 1 in order to return a pointer to the first occupied position. */
   return( &itoa_buffer[ i + 1 ] );
 }
+
+/*
+void putPixel (int x, int y){
+	if(x<129 && y<64){
+
+	if(y<8){ // Page 0
+
+		//om y = 0 så skickas ~1
+			if(y==0){
+				int write = ~1;
+				display[x] = display[x] & write;
+			}
+			// Om y != 0 så skickas 2^y in och inverteras till skärmen
+			else
+			{
+				int write = 1;
+				int i;
+				for (i = 0; i < y; i++)
+				{
+					write *= 2;
+				}
+				display[x] = display[x] & (~write);
+			}
+}
+
+	 if(y>= 8 && y<16){ // Page 1
+			y = y - 8;
+
+			if(y==0){
+				int write = ~1;
+				display[128+x] = display[128+x] & write;
+			}
+			// Om y != 0 så skickas 2^y in och inverteras till skärmen
+			else
+			{
+				int write = 1;
+				int i;
+				for (i = 0; i < y; i++)
+				{
+					write *= 2;
+				}
+				display[128+x] = display[128+x] & (~write);
+			}
+		}
+
+		if(y>= 16 && y<24){ // Page 2
+ 			y = y - 16;
+
+			if(y==0){
+				int write = ~1;
+				display[256+x] = display[256+x] & write;
+			}
+			// Om y != 0 så skickas 2^y in och inverteras till skärmen
+			else
+			{
+				int write = 1;
+				int i;
+				for (i = 0; i < y; i++)
+				{
+					write *= 2;
+				}
+				display[256+x] = display[256+x] & (~write);
+			}
+ 		}
+
+		if(y>= 24 && y<32){ // Page 2
+ 			y = y - 24;
+
+			if(y==0){
+				int write = ~1;
+				display[384+x] = display[384+x] & write;
+			}
+			// Om y != 0 så skickas 2^y in och inverteras till skärmen
+			else
+			{
+				int write = 1;
+				int i;
+				for (i = 0; i < y; i++)
+				{
+					write *= 2;
+				}
+				display[384+x] = display[384+x] & (~write);
+			}
+		}
+}
+
+
+}
+
+*/
