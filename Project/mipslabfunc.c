@@ -328,7 +328,7 @@ char * itoaconv( int num )
   return( &itoa_buffer[ i + 1 ] );
 }
 
-/*
+
 void putPixel (int x, int y){
 	if(x<129 && y<64){
 
@@ -416,4 +416,61 @@ void putPixel (int x, int y){
 
 }
 
-*/
+
+
+
+//Psuedo-kods försök till att visualisera hanteringen av att styra med knapp 1 och 2
+void button1(){
+
+int newx;
+int newy;
+int oldx;
+int oldy;
+
+	if(newx>oldx & newy == oldy){
+
+	//sväng uppåt
+	}
+	
+	if(newy>oldy & newx == oldx){
+	//sväng vänster
+	}
+	
+	if(newx<oldx & newy == oldy){
+	//sväng nedåt
+	}
+	if(newy<oldy & oldx == newx){
+	//sväng "höger"
+	}
+	
+}
+
+
+void button2(){
+	int newx;
+	int newy;
+	int oldx;
+	int oldy;
+
+	if(newx>oldx & newy == oldy){
+	//sväng nedåt
+	}
+	
+	if(newy>oldy & newx == oldx){
+	//sväng höger
+	}
+	
+	if(newx<oldx & newy == oldy){
+	//sväng uppåt
+	}
+	if(newy<newx & oldx == oldy){
+	//sväng "vänster"
+	}
+	
+}
+
+void clear_display (void){
+	int i;
+	for (i = 0; i < 512; i++)
+	display[i] = 0xff;
+}
