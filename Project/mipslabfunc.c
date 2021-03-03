@@ -160,8 +160,9 @@ void display_image(int x, const uint8_t *data) {
 
 		DISPLAY_CHANGE_TO_DATA_MODE;
 
-		for(j = 0; j < 32; j++)
-			spi_send_recv(~data[i*32 + j]);
+		// Adding multiplier of 4 so we calculate with the whole width (4 "pages")
+		for(j = 0; j < 32*4; j++)
+			spi_send_recv(~data[i*32*4 + j]);
 	}
 }
 
@@ -329,6 +330,10 @@ char * itoaconv( int num )
 }
 
 
+/* Project code goes here */
+
+/*
+// TBD
 void putPixel (int x, int y){
 	if(x<129 && y<64){
 
@@ -418,6 +423,7 @@ void putPixel (int x, int y){
 
 
 
+// TBD
 
 //Psuedo-kods försök till att visualisera hanteringen av att styra med knapp 1 och 2
 void button1(){
@@ -431,18 +437,18 @@ int oldy;
 
 	//sväng uppåt
 	}
-	
+
 	if(newy>oldy & newx == oldx){
 	//sväng vänster
 	}
-	
+
 	if(newx<oldx & newy == oldy){
 	//sväng nedåt
 	}
 	if(newy<oldy & oldx == newx){
 	//sväng "höger"
 	}
-	
+
 }
 
 
@@ -455,22 +461,63 @@ void button2(){
 	if(newx>oldx & newy == oldy){
 	//sväng nedåt
 	}
-	
+
 	if(newy>oldy & newx == oldx){
 	//sväng höger
 	}
-	
+
 	if(newx<oldx & newy == oldy){
 	//sväng uppåt
 	}
 	if(newy<newx & oldx == oldy){
 	//sväng "vänster"
 	}
-	
+
+}
+*/
+
+/*
+	Snake initialization. Puts a new snake in the standard starting position.
+*/
+void snake_init(void){
+
+	display[166] = 127;
+	display[167] = 127;
+	display[295] = 254;
+	display[294] = 254;
+
+	return;
 }
 
-void clear_display (void){
+/*
+	Initialization of the border around the gamefield.
+*/
+void border_init(void){
+	int row, column;
+	int r_offset = 0;
+	int c_offset = 0;
+
+	// Draws short sides
+	for(row=0; row <= 4; row++){
+		display[r_offset] = 0;
+		display[127 + r_offset] = 0;
+		r_offset += 128;
+	}
+
+	// Draws long sides
+
+	for(column=1; column < 127; column++){
+		display[column] = 254;
+		display[384+column] = 127;
+	}
+
+	return;
+}
+
+// Helper function that clears the whole display
+void clear_display(void){
 	int i;
 	for (i = 0; i < 512; i++)
-	display[i] = 0xff;
+		display[i] = 255; // Sets all the bits to 1s to turn of pixels.
+	return;
 }

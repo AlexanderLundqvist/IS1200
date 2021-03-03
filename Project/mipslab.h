@@ -35,18 +35,28 @@ void tick( unsigned int * timep );
 */
 void display_debug( volatile int * const addr );
 
-/* Project related code */
+/* -------------------------- Project related code -------------------------- */
 
-/* Declare bitmap array containing the display */
-extern const uint8_t const display[128*4]; // 128*4 Bytes for each pixel column
+/*
+  Declare bitmap array containing the display
+*/
+extern uint8_t display[128*4]; // 128*4 Bytes for each pixel column
 
-/* End of project related code */
+/*
+
+*/
+void clear_display(void);
+void snake_init(void);
+void border_init(void);
+
+
+/* ----------------------- End of project related code ---------------------- */
 
 
 /* Declare bitmap array containing font */
 extern const uint8_t const font[128*8];
 /* Declare bitmap array containing icon */
-extern const uint8_t const icon[128];
+// extern const uint8_t const icon[128];
 /* Declare text buffer for display output */
 extern char textbuffer[4][16];
 

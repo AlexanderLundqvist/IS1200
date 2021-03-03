@@ -146,7 +146,7 @@ const uint8_t const font[] = {
 	is represented with a bit. The array consists of bytes where every byte displays
 	a vertical of pixels.
 */
-const uint8_t const display[] = {
+uint8_t display[] = {
 
 	/* ---------------------------- Start of page 0 --------------------------- */
 

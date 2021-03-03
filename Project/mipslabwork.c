@@ -22,7 +22,10 @@ volatile int *port_E;
 
 int timeoutcount = 0;
 
-/* Interrupt Service Routine */
+/*
+  Interrupt Service Routine handling the inputs from the buttons.
+
+*/
 void user_isr( void )
 {
   return;
@@ -43,6 +46,7 @@ void labinit( void )
 	TMR2 = 0x0;
 	PR2 = ((80000000 / 256) / 10);
 	T2CONSET = 0x8000;
+
   return;
 }
 
@@ -57,12 +61,16 @@ void game_loop( void )
     IFSCLR(0) = 0x100;
   }
 
+  // Test
+  if(button & 1){
+    clear_display();
+  }
+
   if(timeoutcount == 10){
 
+
+    // Debug to display what is stored in display array
     display_image(0, display);
-    display_image(32, display);
-    display_image(64, display);
-    display_image(96, display);
 
     timeoutcount = 0;
 
@@ -73,14 +81,14 @@ int swt;
 if(swt = getsw()){
 	if(getsw() == 0x3)
 		diff =+ 50;
-	
+
 	if (getsw() = 0x2)
 		diff =+ 100;
-	
+
 	if	(getsw() = 0x1)
 		diff =+ 200;
 	}
-	
+
 
 }
 */

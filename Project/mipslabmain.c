@@ -59,22 +59,27 @@ int main(void) {
 	/* Introduction */
 	display_init();
 	display_string(0, "      SNAKE     ");
-	display_string(1, "   By Group 30  ");
+	display_string(1, "   By Group 18  ");
 	display_string(2, "");
 	display_string(3, "      Enjoy!   ");
 	display_update();
 
-	labinit(); /* Do any lab-specific initialization */
 	quicksleep(20000000);
 	display_string(0, "");
-	display_string(0, "");
-	display_string(0, "");
-	display_string(0, "");
+	display_string(1, "");
+	display_string(2, "");
+	display_string(3, "");
 	display_update();
 
+	labinit(); // Initialize essential components and registers
+
+	snake_init();
+	border_init();
+
+	// This loop will run indefinitely
 	while( 1 )
 	{
-	  game_loop(); /* Do lab-specific things again and again */
+	  game_loop(); // The actuall game process
 	}
 	return 0;
 }
