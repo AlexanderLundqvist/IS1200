@@ -435,18 +435,35 @@ int oldy;
 
 	if(newx>oldx & newy == oldy){
 
-	//sväng uppåt
+	while("inget nytt knapptryck"){		//sväng uppåt (addera i y-led)
+		putPixel(bike1x, bike1y)
+		display_image(0, display)
+		bike1y++
+		oldy = bike1y
+		}
 	}
 
 	if(newy>oldy & newx == oldx){
-	//sväng vänster
+	while ("inget nytt knapptryck")	//sväng vänster (subtrahera i x-led)
+	putPixel(bike1x, bike1y)
+		display_image(0, display)
+		bike1x--
+		oldx = bike1x
 	}
 
 	if(newx<oldx & newy == oldy){
-	//sväng nedåt
+	while ("inget nytt knapptryck")	//sväng nedåt (subtrahera i y-led)
+	putPixel(bike1x, bike1y)
+		display_image(0, display)
+		bike1y--
+		oldy = bike1y
 	}
 	if(newy<oldy & oldx == newx){
-	//sväng "höger"
+	while ("inget nytt knapptryck")	//sväng "höger" (addera i x-led)
+	putPixel(bike1x, bike1y)
+		display_image(0, display)
+		bike1x++
+		oldx = bike1x
 	}
 
 }
@@ -459,18 +476,34 @@ void button2(){
 	int oldy;
 
 	if(newx>oldx & newy == oldy){
-	//sväng nedåt
+	while ("inget nytt knapptryck")	//sväng nedåt (subtrahera i y-led)
+	putPixel(bike1x, bike1y)
+		display_image(0, display)
+		bike1y--
+		oldy = bike1y
 	}
 
 	if(newy>oldy & newx == oldx){
-	//sväng höger
+	while ("inget nytt knapptryck")	//sväng "höger" (addera i x-led)
+	putPixel(bike1x, bike1y)
+		display_image(0, display)
+		bike1x++
+		oldx = bike1x
 	}
 
 	if(newx<oldx & newy == oldy){
-	//sväng uppåt
+	while("inget nytt knapptryck"){		//sväng uppåt (addera i y-led)
+		putPixel(bike1x, bike1y)
+		display_image(0, display)
+		bike1y++
+		oldy = bike1y
 	}
 	if(newy<newx & oldx == oldy){
-	//sväng "vänster"
+	while ("inget nytt knapptryck")	//sväng vänster (subtrahera i x-led)
+	putPixel(bike1x, bike1y)
+		display_image(0, display)
+		bike1x--
+		oldx = bike1x
 	}
 
 }
