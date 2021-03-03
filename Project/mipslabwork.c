@@ -38,7 +38,8 @@ void labinit( void )
 
   *tris_E = *tris_E & 0xffffff00; // To mask out the 8 LSBs
   *port_E = 0x00000000; // Set PORTE to 0 so we can see the ticks better
-
+  TRISF = TRISF & 0x2;
+	
   /* Timer from lab 3 */
   TRISD = TRISD | 0x0fe0;
   T2CON = 0x0;

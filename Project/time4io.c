@@ -18,3 +18,7 @@ int getsw(){
 int getbtns(){
   return ((PORTD>>5) & 0x0007);
 }
+
+int getbtn1(){
+  return ((PORTF) & 0x2);
+}
