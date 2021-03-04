@@ -38,7 +38,7 @@ void labinit( void )
 
   *tris_E = *tris_E & 0xffffff00; // To mask out the 8 LSBs
   *port_E = 0x00000000; // Set PORTE to 0 so we can see the ticks better
-  TRISF = TRISF & 0x2;
+  TRISFSET = 0x2;
 
   /* Timer from lab 3 */
   TRISD = TRISD | 0x0fe0;
@@ -61,6 +61,8 @@ void game_loop( void )
 {
   int switches = getsw();
 	int button = getbtns();
+	int bikecrash1 = 0;			//To not crash player1's bike at the start
+	int bikecrash2 = 0;			//To not crash player2's bike at the start
 
   if(IFS(0) & 0x100){
     timeoutcount++;
@@ -69,20 +71,37 @@ void game_loop( void )
 
   if(timeoutcount == 10){
 
+	
+	if(button & 0x200){ //Button 1
+		if(curentPos1 == 0){  	//0 at the current coordinate indicates crashing into a lit up pixel
+		 bikecrash1 = 1;		//Set game over flag
+		 break;
+		}
+	}
+	
     // Reset stub
-    if(button & 1){
+    if(button & 1){		//Button 2
       clear_display();
       border_init();
       player1_init();
     }
 
-    if(button & 2){
+    if(button & 2){			//Button 3
+		
+	 if(curentPos1 == 0){  	//0 at the current coordinate indicates crashing into a lit up pixel
+		 bikecrash1 = 1;		//Set game over flag
+		 break;
+	 }
 
     }
 
-    if(button & 4){
+    if(button & 4){			//Button 4
       // do crash check?
-
+	 if(curentPos2 == 0){  	//0 at the current coordinate indicates crashing into a lit up pixel
+		 bikecrash2 = 1;		//Set game over flag
+		 break;
+	 }
+		 
       // Change speed
       // draw new pixel
       if(bike1_direction == 1){
@@ -90,11 +109,28 @@ void game_loop( void )
         draw_pixel(bike1_x, bike1_y);
       }
     }
+	
 
     // Update the screen with new information
     display_image(0, display);
 
     timeoutcount = 0;
+
+
+	//Check if player 1 (button 1-2) has crashed
+	if(bikecrash1 == 1){	
+		clear_display();
+		display_string(0, "PLAYER2 WON!");
+		//write something here to get back to main
+	}
+
+
+	//Check if player 2 (button 3-4) has crashed
+	if(bikecrash2 == 1){	
+		clear_display();
+		display_string(0, "PLAYER1 WON!");
+		//write something here to get back to main
+	}
 
   }
 }

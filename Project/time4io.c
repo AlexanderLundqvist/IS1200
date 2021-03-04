@@ -20,5 +20,5 @@ int getbtns(){
 }
 
 int getbtn1(){
-  return ((PORTF) & 0x2);
+  return ((PORTF>>1) & 0x1)<<9;
 }
