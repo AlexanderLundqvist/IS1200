@@ -37,18 +37,24 @@ void display_debug( volatile int * const addr );
 
 /* -------------------------- Project related code -------------------------- */
 
-/*
-  Declare bitmap array containing the display
-*/
+/* Declare bitmap array containing the display */
 extern uint8_t display[128*4]; // 128*4 Bytes for each pixel column
 
-/*
+/* Declaring global variables for player data */
+extern int bike1_x;
+extern int bike1_y;
+extern int bike1_direction;
 
-*/
+extern int bike2_x;
+extern int bike2_y;
+extern int bike2_direction;
+
+/* Function declarations */
+int pow(int base, int exponent);
 void clear_display(void);
-void snake_init(void);
+void player1_init(void);
 void border_init(void);
-
+void draw_pixel(int x, int y);
 
 /* ----------------------- End of project related code ---------------------- */
 

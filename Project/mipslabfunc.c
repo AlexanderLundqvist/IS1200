@@ -23,10 +23,6 @@ static void num32asc( char * s, int );
 #define DISPLAY_TURN_OFF_VDD (PORTFSET = 0x40)
 #define DISPLAY_TURN_OFF_VBAT (PORTFSET = 0x20)
 
-int bike1x;
-int bike1y;
-int bike2x;
-int bike2y;
 
 /* quicksleep:
    A simple function to create a small delay.
@@ -330,7 +326,85 @@ char * itoaconv( int num )
 }
 
 
-/* Project code goes here */
+/* ------------------------- Project code goes here ------------------------- */
+
+
+int bike1_x = 0;
+int bike1_y = 0;
+int bike1_direction = 0;
+
+int bike2_x = 0;
+int bike2_y = 0;
+int bike2_direction = 0;
+
+int speed = 1; // Modifier for timer?
+
+int offset = 128; // Offset to handle each new "row" on the screen.
+
+/* Helper function that clears the whole display */
+void clear_display(void){
+	int i;
+	for (i = 0; i < 512; i++)
+		display[i] = 255; // Sets all the bits to 1s to turn of pixels.
+	return;
+}
+
+/*
+	Math.h doesn't work, need to implement pow ourselves. The function has limited
+	error handling and is mostrly implemented as a helper function to the draw
+	functions.
+*/
+int pow(int base, int exponent){
+	int i;
+	int result = 1;
+	if(exponent == 0){
+		result = 1;
+	}
+	else{
+		for(i = 0; i < exponent; i++){
+		result = result*base;
+		}
+	}
+	return result;
+}
+
+void draw_pixel(int x_in, int y_in){
+	// Basic error handling. Do nothing if coordinates are wrong.
+	// The function ignores the border.
+	if((x_in<1 && y_in<1) || (x_in>126 && y_in>30)){
+		return;
+	}
+
+	// The y value decides what value shall be written to a byte in the display
+	int y_to_byte;
+
+	// Row 1
+	if(y_in<8){
+		y_to_byte = pow(2, (y_in));
+		display[x_in] = display[x_in] & (~y_to_byte);
+	}
+
+	// Row 2
+	if(y_in>=8 && y_in<16){
+		y_to_byte = pow(2, (y_in - 8)); // To account for pixel row only having 8 pixels
+		display[x_in+offset] = display[x_in+offset] & (~y_to_byte);
+	}
+
+	// Row 3
+	if(y_in>=16 && y_in<23){
+		y_to_byte = pow(2, (y_in - 16));
+		display[x_in+offset*2] = display[x_in+offset*2] & (~y_to_byte);
+	}
+
+	// Row 4
+	if(y_in>=23 && y_in<32){
+		y_to_byte = pow(2, (y_in - 32));
+		display[x_in+offset*2] = display[x_in+offset*3] & (~y_to_byte);
+	}
+
+	return;
+}
+
 
 /*
 // TBD
@@ -509,15 +583,14 @@ void button2(){
 }
 */
 
-/*
-	Snake initialization. Puts a new snake in the standard starting position.
-*/
-void snake_init(void){
+/* Player initialization. Puts a new player in the standard starting position */
+void player1_init(void){
 
-	display[166] = 127;
-	display[167] = 127;
-	display[295] = 254;
-	display[294] = 254;
+	bike1_x = 1;
+	bike1_y = 15;
+	bike1_direction = 1; // Goes to the right initially
+
+	draw_pixel(bike1_x, bike1_y);
 
 	return;
 }
@@ -544,13 +617,5 @@ void border_init(void){
 		display[384+column] = 127;
 	}
 
-	return;
-}
-
-// Helper function that clears the whole display
-void clear_display(void){
-	int i;
-	for (i = 0; i < 512; i++)
-		display[i] = 255; // Sets all the bits to 1s to turn of pixels.
 	return;
 }

@@ -58,12 +58,13 @@ int main(void) {
 
 	/* Introduction */
 	display_init();
-	display_string(0, "      SNAKE     ");
+	display_string(0, "       TBD      ");
 	display_string(1, "   By Group 18  ");
 	display_string(2, "");
-	display_string(3, "      Enjoy!   ");
+	display_string(3, "      Enjoy!    ");
 	display_update();
 
+	/* Black screen before game starts */
 	quicksleep(20000000);
 	display_string(0, "");
 	display_string(1, "");
@@ -73,13 +74,10 @@ int main(void) {
 
 	labinit(); // Initialize essential components and registers
 
-	snake_init();
-	border_init();
-
 	// This loop will run indefinitely
 	while( 1 )
 	{
-	  game_loop(); // The actuall game process
+	  game_loop(); // The actual game process
 	}
 	return 0;
 }

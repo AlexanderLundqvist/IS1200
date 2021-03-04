@@ -39,7 +39,7 @@ void labinit( void )
   *tris_E = *tris_E & 0xffffff00; // To mask out the 8 LSBs
   *port_E = 0x00000000; // Set PORTE to 0 so we can see the ticks better
   TRISF = TRISF & 0x2;
-	
+
   /* Timer from lab 3 */
   TRISD = TRISD | 0x0fe0;
   T2CON = 0x0;
@@ -47,6 +47,11 @@ void labinit( void )
 	TMR2 = 0x0;
 	PR2 = ((80000000 / 256) / 10);
 	T2CONSET = 0x8000;
+
+  /* Do initial clearing and drawing a new board */
+  clear_display();
+  border_init();
+  player1_init();
 
   return;
 }
@@ -62,15 +67,31 @@ void game_loop( void )
     IFSCLR(0) = 0x100;
   }
 
-  // Test
-  if(button & 1){
-    clear_display();
-  }
-
   if(timeoutcount == 10){
 
+    // Reset stub
+    if(button & 1){
+      clear_display();
+      border_init();
+      player1_init();
+    }
 
-    // Debug to display what is stored in display array
+    if(button & 2){
+
+    }
+
+    if(button & 4){
+      // do crash check?
+
+      // Change speed
+      // draw new pixel
+      if(bike1_direction == 1){
+        bike1_x++;
+        draw_pixel(bike1_x, bike1_y);
+      }
+    }
+
+    // Update the screen with new information
     display_image(0, display);
 
     timeoutcount = 0;
