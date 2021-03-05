@@ -61,6 +61,7 @@ void game_loop( void )
 {
   int switches = getsw();
 	int button = getbtns();
+	int button1 = getbtn1();
 	int bikecrash1 = 0;			//To not crash player1's bike at the start
 	int bikecrash2 = 0;			//To not crash player2's bike at the start
 
@@ -72,7 +73,7 @@ void game_loop( void )
   if(timeoutcount == 10){
 
 	
-	if(button & 0x200){ //Button 1
+	if(button1 & 0x200){ //Button 1
 		if(curentPos1 == 0){  	//0 at the current coordinate indicates crashing into a lit up pixel
 		 bikecrash1 = 1;		//Set game over flag
 		 break;
