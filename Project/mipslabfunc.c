@@ -371,7 +371,7 @@ int pow(int base, int exponent){
 void draw_pixel(int x_in, int y_in){
 	// Basic error handling. Do nothing if coordinates are wrong.
 	// The function ignores the border.
-	if((x_in<1 && y_in<1) || (x_in>126 && y_in>30)){
+	if(x_in<0 || y_in<0 || x_in>127 || y_in>31){
 		return;
 	}
 
@@ -391,14 +391,14 @@ void draw_pixel(int x_in, int y_in){
 	}
 
 	// Row 3
-	if(y_in>=16 && y_in<23){
+	if(y_in>=16 && y_in<24){
 		y_to_byte = pow(2, (y_in - 16));
 		display[x_in+offset*2] = display[x_in+offset*2] & (~y_to_byte);
 	}
 
 	// Row 4
-	if(y_in>=23 && y_in<32){
-		y_to_byte = pow(2, (y_in - 32));
+	if(y_in>=24 && y_in<32){
+		y_to_byte = pow(2, (y_in - 24));
 		display[x_in+offset*3] = display[x_in+offset*3] & (~y_to_byte);
 	}
 
