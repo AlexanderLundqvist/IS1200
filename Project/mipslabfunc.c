@@ -399,7 +399,7 @@ void draw_pixel(int x_in, int y_in){
 	// Row 4
 	if(y_in>=23 && y_in<32){
 		y_to_byte = pow(2, (y_in - 32));
-		display[x_in+offset*2] = display[x_in+offset*3] & (~y_to_byte);
+		display[x_in+offset*3] = display[x_in+offset*3] & (~y_to_byte);
 	}
 
 	return;

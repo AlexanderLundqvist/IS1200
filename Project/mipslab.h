@@ -52,8 +52,8 @@ extern int bike2_direction;
 extern int bike2_score;
 
 /* Game state variables that check for game over */
-extern int bikecrash1;
-extern int bikecrash2;
+extern int bike1_crash;
+extern int bike2_crash;
 
 /* Function declarations */
 int pow(int base, int exponent);
