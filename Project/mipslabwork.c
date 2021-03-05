@@ -183,7 +183,7 @@ void game_loop( void )
   		display_string(1, " PLAYER 2 WON!  ");
       display_update();
       quicksleep(15000000);
-	  *port_E = *port_E - 0x80;
+	  *port_E = *port_E & 0x80;
       labinit();
       return;
   		//write something here to get back to main
@@ -195,7 +195,7 @@ void game_loop( void )
       display_string(1, " PLAYER 1 WON!  ");
       display_update();
       quicksleep(15000000);
-	  *port_E = *port_E - 0x1
+	  *port_E = *port_E & 0x1;
       labinit();
 	  
       //write something here to get back to main
