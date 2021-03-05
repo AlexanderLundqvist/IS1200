@@ -7,6 +7,7 @@
 #include <stdint.h>   /* Declarations of uint_32 and the like */
 #include <pic32mx.h>  /* Declarations of system-specific addresses etc */
 #include "mipslab.h"  /* Declatations for these labs */
+#include <stdlib.h>		/* Declaration for the project */
 
 /* Declare a helper function which is local to this file */
 static void num32asc( char * s, int );
@@ -22,7 +23,6 @@ static void num32asc( char * s, int );
 
 #define DISPLAY_TURN_OFF_VDD (PORTFSET = 0x40)
 #define DISPLAY_TURN_OFF_VBAT (PORTFSET = 0x20)
-
 
 /* quicksleep:
    A simple function to create a small delay.
@@ -405,198 +405,135 @@ void draw_pixel(int x_in, int y_in){
 	return;
 }
 
+/* Function to decode a pixel at certain coordinates. Returns a byte value. */
+/*
+int decode_pixel(int x, int y){
+	// Basic error handling. Do nothing if coordinates are wrong.
+	// The function ignores the border.
+	if((x<1 && y<1) || (x>126 && y>30)){
+		return;
+	}
+	int pixel_to_byte;
+
+	// Row 1
+	if(y<8){
+		y_to_byte = pow(2, (y));
+	}
+
+	// Row 2
+	if(y>=8 && y<16){
+		y_to_byte = pow(2, (y - 8)); // To account for pixel row only having 8 pixels
+	}
+
+	// Row 3
+	if(y_in>=16 && y_in<23){
+		y_to_byte = pow(2, (y - 16));
+	}
+
+	// Row 4
+	if(y>=23 && y<32){
+		y_to_byte = pow(2, (y - 32));
+	}
+
+	return pixel_to_byte;
+} */
 
 /*
-// TBD
-void putPixel (int x, int y){
-	if(x<129 && y<64){
+int check_crash(int d, int x, int y){
 
-	if(y<8){ // Page 0
+	int x_next;
+	int y_next;
+	int status;
 
-		//om y = 0 så skickas ~1
-			if(y==0){
-				int write = ~1;
-				display[x] = display[x] & write;
-			}
-			// Om y != 0 så skickas 2^y in och inverteras till skärmen
-			else
-			{
-				int write = 1;
-				int i;
-				for (i = 0; i < y; i++)
-				{
-					write *= 2;
-				}
-				display[x] = display[x] & (~write);
-			}
-}
-
-	 if(y>= 8 && y<16){ // Page 1
-			y = y - 8;
-
-			if(y==0){
-				int write = ~1;
-				display[128+x] = display[128+x] & write;
-			}
-			// Om y != 0 så skickas 2^y in och inverteras till skärmen
-			else
-			{
-				int write = 1;
-				int i;
-				for (i = 0; i < y; i++)
-				{
-					write *= 2;
-				}
-				display[128+x] = display[128+x] & (~write);
-			}
+	// Check right
+	if(d == 1){
+		x_next = x + 1;
+		y_next = y;
+		if(Something){
+			status = 1;
 		}
-
-		if(y>= 16 && y<24){ // Page 2
- 			y = y - 16;
-
-			if(y==0){
-				int write = ~1;
-				display[256+x] = display[256+x] & write;
-			}
-			// Om y != 0 så skickas 2^y in och inverteras till skärmen
-			else
-			{
-				int write = 1;
-				int i;
-				for (i = 0; i < y; i++)
-				{
-					write *= 2;
-				}
-				display[256+x] = display[256+x] & (~write);
-			}
- 		}
-
-		if(y>= 24 && y<32){ // Page 2
- 			y = y - 24;
-
-			if(y==0){
-				int write = ~1;
-				display[384+x] = display[384+x] & write;
-			}
-			// Om y != 0 så skickas 2^y in och inverteras till skärmen
-			else
-			{
-				int write = 1;
-				int i;
-				for (i = 0; i < y; i++)
-				{
-					write *= 2;
-				}
-				display[384+x] = display[384+x] & (~write);
-			}
-		}
-}
-
-
-}
-
-
-
-// TBD
-
-//Psuedo-kods försök till att visualisera hanteringen av att styra med knapp 1 och 2
-void button1(){
-
-int newx;
-int newy;
-int oldx;
-int oldy;
-
-	if(newx>oldx & newy == oldy){
-
-	while("inget nytt knapptryck"){		//sväng uppåt (addera i y-led)
-		putPixel(bike1x, bike1y)
-		display_image(0, display)
-		bike1y++
-		oldy = bike1y
+		else{
+			status = 0;
 		}
 	}
-
-	if(newy>oldy & newx == oldx){
-	while ("inget nytt knapptryck")	//sväng vänster (subtrahera i x-led)
-	putPixel(bike1x, bike1y)
-		display_image(0, display)
-		bike1x--
-		oldx = bike1x
-	}
-
-	if(newx<oldx & newy == oldy){
-	while ("inget nytt knapptryck")	//sväng nedåt (subtrahera i y-led)
-	putPixel(bike1x, bike1y)
-		display_image(0, display)
-		bike1y--
-		oldy = bike1y
-	}
-	if(newy<oldy & oldx == newx){
-	while ("inget nytt knapptryck")	//sväng "höger" (addera i x-led)
-	putPixel(bike1x, bike1y)
-		display_image(0, display)
-		bike1x++
-		oldx = bike1x
-	}
-
-}
-
-
-void button2(){
-	int newx;
-	int newy;
-	int oldx;
-	int oldy;
-
-	if(newx>oldx & newy == oldy){
-	while ("inget nytt knapptryck")	//sväng nedåt (subtrahera i y-led)
-	putPixel(bike1x, bike1y)
-		display_image(0, display)
-		bike1y--
-		oldy = bike1y
-	}
-
-	if(newy>oldy & newx == oldx){
-	while ("inget nytt knapptryck")	//sväng "höger" (addera i x-led)
-	putPixel(bike1x, bike1y)
-		display_image(0, display)
-		bike1x++
-		oldx = bike1x
-	}
-
-	if(newx<oldx & newy == oldy){
-	while("inget nytt knapptryck"){		//sväng uppåt (addera i y-led)
-		putPixel(bike1x, bike1y)
-		display_image(0, display)
-		bike1y++
-		oldy = bike1y
-	}
-	if(newy<newx & oldx == oldy){
-	while ("inget nytt knapptryck")	//sväng vänster (subtrahera i x-led)
-	putPixel(bike1x, bike1y)
-		display_image(0, display)
-		bike1x--
-		oldx = bike1x
-	}
-
+	return status;
 }
 */
 
-/* Player initialization. Puts a new player in the standard starting position */
-void player1_init(void){
+/* Update players */
+void player1_update(int direction){
+	switch(direction){
+
+		case 1:
+			bike1_x++;
+			draw_pixel(bike1_x, bike1_y);
+			break;
+
+		case 2:
+			bike1_y--;
+			draw_pixel(bike1_x, bike1_y);
+			break;
+
+		case 3:
+			bike1_x--;
+			draw_pixel(bike1_x, bike1_y);
+			break;
+
+		case 4:
+			bike1_y++;
+			draw_pixel(bike1_x, bike1_y);
+			break;
+
+	}
+}
+
+void player2_update(int direction){
+	switch(direction){
+
+		case 1:
+			bike2_x++;
+			draw_pixel(bike2_x, bike2_y);
+			break;
+
+		case 2:
+			bike2_y--;
+			draw_pixel(bike2_x, bike2_y);
+			break;
+
+		case 3:
+			bike2_x--;
+			draw_pixel(bike2_x, bike2_y);
+			break;
+
+		case 4:
+			bike2_y++;
+			draw_pixel(bike2_x, bike2_y);
+			break;
+
+	}
+}
+
+/* Player initialization. Puts players in the standard starting position */
+void players_init(void){
 
 	bike1_x = 1;
 	bike1_y = 15;
 	bike1_direction = 1; // Goes to the right initially
 
+	bike2_x = 126;
+	bike2_y = 15;
+	bike2_direction = 3; // Goes to the left initially
+
 	draw_pixel(bike1_x, bike1_y);
+	draw_pixel(bike2_x, bike2_y);
 
 	return;
 }
 
 /*
-	Initialization of the border around the gamefield.
+	Initialization of the border around the gamefield. The code was initial atempt
+	and is redundant as it could've been implemented with draw_pixel, but it
+	provides an insight in how we draw stuff by manipulating the display array.
 */
 void border_init(void){
 	int row, column;
@@ -610,8 +547,7 @@ void border_init(void){
 		r_offset += 128;
 	}
 
-	// Draws long sides
-
+	// Draws long sides. From 1 - 126 as they are already drawn.
 	for(column=1; column < 127; column++){
 		display[column] = 254;
 		display[384+column] = 127;
@@ -619,3 +555,5 @@ void border_init(void){
 
 	return;
 }
+
+/* Enemy AI? */

@@ -44,20 +44,27 @@ extern uint8_t display[128*4]; // 128*4 Bytes for each pixel column
 extern int bike1_x;
 extern int bike1_y;
 extern int bike1_direction;
+extern int bike1_score;
 
 extern int bike2_x;
 extern int bike2_y;
 extern int bike2_direction;
+extern int bike2_score;
 
-extern int bikecrash1;				//Game state variables that check for game over
+/* Game state variables that check for game over */
+extern int bikecrash1;
 extern int bikecrash2;
 
 /* Function declarations */
 int pow(int base, int exponent);
 void clear_display(void);
-void player1_init(void);
+void players_init(void);
 void border_init(void);
 void draw_pixel(int x, int y);
+int decode_pixel(int x, int y);
+void player1_update(int direction);
+void player2_update(int direction);
+
 
 /* ----------------------- End of project related code ---------------------- */
 
