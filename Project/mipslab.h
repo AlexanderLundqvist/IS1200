@@ -55,15 +55,22 @@ extern int bike2_score;
 extern int bike1_crash;
 extern int bike2_crash;
 
+/* Array to hold all pixels on-off state */
+extern char taken[128*32];
+
 /* Function declarations */
 int pow(int base, int exponent);
 void clear_display(void);
 void players_init(void);
 void border_init(void);
 void draw_pixel(int x, int y);
-int decode_pixel(int x, int y);
+int add_taken(int x, int y);
+void clear_taken(void);
 void player1_update(int direction);
 void player2_update(int direction);
+void check_crash(void);
+void get_score(void);
+void game_init(void);
 
 
 /* ----------------------- End of project related code ---------------------- */

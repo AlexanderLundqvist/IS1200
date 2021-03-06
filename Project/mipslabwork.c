@@ -21,10 +21,10 @@ volatile int *tris_E;
 volatile int *port_E;
 
 int timeoutcount = 0;
-int bike1_crash;
-int bike2_crash;
-int bike1_score;
 int bike2_score;
+int bike1_score;
+int bike1_crash;			//To not crash player1's bike at the start
+int bike2_crash;			//To not crash player2's bike at the start
 
 /* Interrupt Service Routine */
 void user_isr( void )
@@ -49,26 +49,41 @@ void labinit( void )
 	PR2 = ((80000000 / 256) / 50);
 	T2CONSET = 0x8000;
 
+  bike2_score = 4;
+  bike1_score = 8;
+}
+
+void game_init(void){
   /* Do initial clearing and drawing a new board */
   clear_display();
+  clear_taken();
   border_init();
   players_init();
-
   bike1_crash = 0;			//To not crash player1's bike at the start
   bike2_crash = 0;			//To not crash player2's bike at the start
-  bike1_score = ~(1);
-  bike2_score = 8;
-
-  return;
 }
 
 /* This code is called repeatedly from mipslabmain */
-void game_loop( void )
+void game_loop(void)
 {
   int switches = getsw();
 	int button = getbtns();
 	int button1 = getbtn1();
 
+  //Flip different switches to get faster or slower game speed
+	if(switches = getsw()){
+		if(getsw() == 0x8)  //Switch 4
+      PR2 = ((80000000 / 256) / 100);
+
+		if(getsw() == 0x4)  //Switch 3
+      PR2 = ((80000000 / 256) / 70);
+
+    if(getsw() == 0x2)		//Switch 2
+      PR2 =((80000000 / 256) / 50);
+
+    if(getsw() == 0x1)		//Switch 1
+      PR2 = ((80000000 / 256) / 30);
+  }
 
   if(IFS(0) & 0x100){
     timeoutcount++;
@@ -76,21 +91,6 @@ void game_loop( void )
   }
 
   if(timeoutcount == 10){
-	
-	//Flip different switches to get faster or slower game speed
-	if(switches = getsw()){
-		if(getsw() == 0x8)  //Switch 4?
-      PR2 = ((80000000 / 256) / 120);
-		
-		if(getsw() == 0x4)  //Switch 3
-      PR2 = ((80000000 / 256) / 100);
-
-    if(getsw() == 0x2)		//Switch 2
-      PR2 =((80000000 / 256) / 50);
-
-    if(getsw() == 0x1)		//Switch 1
-      PR2 = ((80000000 / 256) / 10);
-  }
 
   	if(button1 & 0x200){ //Button 1
     	switch(bike2_direction){
@@ -178,45 +178,12 @@ void game_loop( void )
     player1_update(bike1_direction);
     player2_update(bike2_direction);
 
-    if(bike1_x == 127 || bike1_x == 0 || bike1_y == 0 || bike1_y == 31){
-      bike1_crash = 1;
-    }
-
-    if(bike2_x == 127 || bike2_x == 0 || bike2_y == 0 || bike2_y == 31){
-      bike2_crash = 1;
-    }
+    check_crash();
 
     // Update the screen with new information
     display_image(0, display);
     timeoutcount = 0;
 
-
-  	//Check if player 1 (button 1-2) has crashed
-  	if(bike1_crash == 1){
-	 bike1_score++; //Losing player takes a hit
-	 get_score();	//Decrease a led-light
-  	 clear_display();
-  	 display_string(1, " PLAYER 2 WON!  ");
-     display_update();
-     quicksleep(15000000);
-	  
-     labinit();
-      return;
-  		//write something here to get back to main
-  	}
-
-    //Check if player 1 (button 1-2) has crashed
-    if(bike2_crash == 1){
-	  bike2_score--; //Losing player takes a hit
-	  get_score();	//Decrease a led-light
-      clear_display();
-      display_string(1, " PLAYER 1 WON!  ");
-      display_update();
-      quicksleep(15000000);
-      labinit();
-	  
-      //write something here to get back to main
-    }
 
   }
 }

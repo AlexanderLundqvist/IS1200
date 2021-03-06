@@ -338,7 +338,7 @@ int bike2_x = 0;
 int bike2_y = 0;
 int bike2_direction = 0;
 
-int speed = 1; // Modifier for timer?
+char taken[4096];
 
 int offset = 128; // Offset to handle each new "row" on the screen.
 
@@ -347,6 +347,15 @@ void clear_display(void){
 	int i;
 	for (i = 0; i < 512; i++)
 		display[i] = 255; // Sets all the bits to 1s to turn of pixels.
+	return;
+}
+
+/* Sets all the values to 0 in the taken array. */
+void clear_taken(void){
+	int i;
+	for(i = 0; i < 4096; i++){
+		taken[i] = 0;
+	}
 	return;
 }
 
@@ -370,7 +379,7 @@ int pow(int base, int exponent){
 }
 
 	//Call this funtion to decrease a led-light for the losing player
-void get_score(){
+void get_score(void){
 	int led;
 	if(bike1_crash == 1){
 		led = pow(2, bike1_score);
@@ -380,8 +389,8 @@ void get_score(){
 		led = pow(2, bike2_score);
 		PORTE = PORTE & ~(led);
 	}
-	return;
-
+	else
+		return;
 }
 
 void draw_pixel(int x_in, int y_in){
@@ -421,60 +430,19 @@ void draw_pixel(int x_in, int y_in){
 	return;
 }
 
-/* Function to decode a pixel at certain coordinates. Returns a byte value. */
-/*
-int decode_pixel(int x, int y){
-	// Basic error handling. Do nothing if coordinates are wrong.
-	// The function ignores the border.
-	if((x<1 && y<1) || (x>126 && y>30)){
-		return;
-	}
-	int pixel_to_byte;
-
-	// Row 1
-	if(y<8){
-		y_to_byte = pow(2, (y));
+/* Adds pixel position to array that contains all the drawn pixels. */
+int add_taken(int x, int y){
+	int flag;
+	if(taken[(y*128)+x] == 1){
+		flag = 1;
 	}
 
-	// Row 2
-	if(y>=8 && y<16){
-		y_to_byte = pow(2, (y - 8)); // To account for pixel row only having 8 pixels
+	else{
+		taken[(y*128)+x] = 1;
+		flag = 0;
 	}
-
-	// Row 3
-	if(y_in>=16 && y_in<23){
-		y_to_byte = pow(2, (y - 16));
-	}
-
-	// Row 4
-	if(y>=23 && y<32){
-		y_to_byte = pow(2, (y - 32));
-	}
-
-	return pixel_to_byte;
-} */
-
-/*
-int check_crash(int d, int x, int y){
-
-	int x_next;
-	int y_next;
-	int status;
-
-	// Check right
-	if(d == 1){
-		x_next = x + 1;
-		y_next = y;
-		if(Something){
-			status = 1;
-		}
-		else{
-			status = 0;
-		}
-	}
-	return status;
+	return flag;
 }
-*/
 
 /* Update players */
 void player1_update(int direction){
@@ -482,22 +450,42 @@ void player1_update(int direction){
 
 		case 1:
 			bike1_x++;
-			draw_pixel(bike1_x, bike1_y);
+			if(add_taken(bike1_x, bike1_y) == 0){
+				draw_pixel(bike1_x, bike1_y);
+			}
+			else{
+				bike1_crash = 1;
+			}
 			break;
 
 		case 2:
 			bike1_y--;
-			draw_pixel(bike1_x, bike1_y);
+			if(add_taken(bike1_x, bike1_y) == 0){
+				draw_pixel(bike1_x, bike1_y);
+			}
+			else{
+				bike1_crash = 1;
+			}
 			break;
 
 		case 3:
 			bike1_x--;
-			draw_pixel(bike1_x, bike1_y);
+			if(add_taken(bike1_x, bike1_y) == 0){
+				draw_pixel(bike1_x, bike1_y);
+			}
+			else{
+				bike1_crash = 1;
+			}
 			break;
 
 		case 4:
 			bike1_y++;
-			draw_pixel(bike1_x, bike1_y);
+			if(add_taken(bike1_x, bike1_y) == 0){
+				draw_pixel(bike1_x, bike1_y);
+			}
+			else{
+				bike1_crash = 1;
+			}
 			break;
 
 	}
@@ -508,25 +496,93 @@ void player2_update(int direction){
 
 		case 1:
 			bike2_x++;
-			draw_pixel(bike2_x, bike2_y);
+			if(add_taken(bike2_x, bike2_y) == 0){
+				draw_pixel(bike2_x, bike2_y);
+			}
+			else{
+				bike2_crash = 1;
+			}
 			break;
 
 		case 2:
 			bike2_y--;
-			draw_pixel(bike2_x, bike2_y);
+			if(add_taken(bike2_x, bike2_y) == 0){
+				draw_pixel(bike2_x, bike2_y);
+			}
+			else{
+				bike2_crash = 1;
+			}
 			break;
 
 		case 3:
 			bike2_x--;
-			draw_pixel(bike2_x, bike2_y);
+			if(add_taken(bike2_x, bike2_y) == 0){
+				draw_pixel(bike2_x, bike2_y);
+			}
+			else{
+				bike2_crash = 1;
+			}
 			break;
 
 		case 4:
 			bike2_y++;
-			draw_pixel(bike2_x, bike2_y);
+			if(add_taken(bike2_x, bike2_y) == 0){
+				draw_pixel(bike2_x, bike2_y);
+			}
+			else{
+				bike2_crash = 1;
+			}
 			break;
 
 	}
+}
+
+void check_crash(void){
+
+	if(bike1_x == 127 || bike1_x == 0 || bike1_y == 0 || bike1_y == 31){
+		bike1_crash = 1;
+	}
+
+	if(bike2_x == 127 || bike2_x == 0 || bike2_y == 0 || bike2_y == 31){
+		bike2_crash = 1;
+	}
+
+	if(bike1_crash == 1 && bike2_crash == 1){
+		clear_display();
+		display_string(1, "      TIE!      ");
+		display_string(3, "  Keep trying...");
+		display_update();
+		quicksleep(15000000);
+		game_init();
+	}
+
+	//Check if player 1 (button 1-2) has crashed
+	else if(bike1_crash == 1){
+		bike1_score--; //Losing player takes a hit
+		get_score();	//Decrease a led-light
+		clear_display();
+		display_string(1, "  PLAYER 1 WON!  ");
+		display_string(3, "");
+		display_update();
+		quicksleep(15000000);
+		game_init();
+		return;
+	}
+
+	//Check if player 1 (button 1-2) has crashed
+	else if(bike2_crash == 1){
+		bike2_score--; //Losing player takes a hit
+		get_score();	//Decrease a led-light
+		clear_display();
+		display_string(1, "  PLAYER 2 WON!  ");
+		display_string(3, "");
+		display_update();
+		quicksleep(15000000);
+		game_init();
+		return;
+	}
+	else
+		return;
 }
 
 /* Player initialization. Puts players in the standard starting position */
@@ -534,10 +590,12 @@ void players_init(void){
 
 	bike1_x = 1;
 	bike1_y = 15;
+	add_taken(bike1_x, bike1_y);
 	bike1_direction = 1; // Goes to the right initially
 
 	bike2_x = 126;
 	bike2_y = 15;
+	add_taken(bike2_x, bike2_y);
 	bike2_direction = 3; // Goes to the left initially
 
 	draw_pixel(bike1_x, bike1_y);

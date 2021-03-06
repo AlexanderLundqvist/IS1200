@@ -58,7 +58,7 @@ int main(void) {
 
 	/* Introduction */
 	display_init();
-	display_string(0, "       TBD      ");
+	display_string(0, "    TRON light   ");
 	display_string(1, "   By Group 18  ");
 	display_string(2, "");
 	display_string(3, "      Enjoy!    ");
@@ -73,6 +73,7 @@ int main(void) {
 	display_update();
 
 	labinit(); // Initialize essential components and registers
+	game_init(); // Initialize the game
 
 	// This loop will run indefinitely
 	while( 1 )
