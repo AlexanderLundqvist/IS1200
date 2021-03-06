@@ -12,6 +12,7 @@
 /* Declare a helper function which is local to this file */
 static void num32asc( char * s, int );
 
+
 #define DISPLAY_CHANGE_TO_COMMAND_MODE (PORTFCLR = 0x10)
 #define DISPLAY_CHANGE_TO_DATA_MODE (PORTFSET = 0x10)
 
@@ -366,6 +367,21 @@ int pow(int base, int exponent){
 		}
 	}
 	return result;
+}
+
+	//Call this funtion to decrease a led-light for the losing player
+void get_score(){
+	int led;
+	if(bike1_crash == 1){
+		led = pow(2, bike1_score);
+		PORTE = PORTE & ~(led);
+	}
+	else if(bike2_crash == 1){
+		led = pow(2, bike2_score);
+		PORTE = PORTE & ~(led);
+	}
+	return;
+
 }
 
 void draw_pixel(int x_in, int y_in){

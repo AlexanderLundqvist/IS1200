@@ -55,9 +55,9 @@ void labinit( void )
   players_init();
 
   bike1_crash = 0;			//To not crash player1's bike at the start
-	bike2_crash = 0;			//To not crash player2's bike at the start
-  bike1_score = 0;
-  bike2_score = 0;
+  bike2_crash = 0;			//To not crash player2's bike at the start
+  bike1_score = ~(1);
+  bike2_score = 8;
 
   return;
 }
@@ -179,23 +179,26 @@ void game_loop( void )
 
   	//Check if player 1 (button 1-2) has crashed
   	if(bike1_crash == 1){
-  		clear_display();
-  		display_string(1, " PLAYER 2 WON!  ");
-      display_update();
-      quicksleep(15000000);
-	  *port_E = *port_E & 0x80;
-      labinit();
+	 bike1_score++; //Losing player takes a hit
+	 get_score();	//Decrease a led-light
+  	 clear_display();
+  	 display_string(1, " PLAYER 2 WON!  ");
+     display_update();
+     quicksleep(15000000);
+	  
+     labinit();
       return;
   		//write something here to get back to main
   	}
 
     //Check if player 1 (button 1-2) has crashed
     if(bike2_crash == 1){
+	  bike2_score--; //Losing player takes a hit
+	  get_score();	//Decrease a led-light
       clear_display();
       display_string(1, " PLAYER 1 WON!  ");
       display_update();
       quicksleep(15000000);
-	  *port_E = *port_E & 0x1;
       labinit();
 	  
       //write something here to get back to main
