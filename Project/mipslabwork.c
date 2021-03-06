@@ -76,7 +76,21 @@ void game_loop( void )
   }
 
   if(timeoutcount == 10){
+	
+	//Flip different switches to get faster or slower game speed
+	if(switches = getsw()){
+		if(getsw() == 0x8)  //Switch 4?
+      PR2 = ((80000000 / 256) / 120);
+		
+		if(getsw() == 0x4)  //Switch 3
+      PR2 = ((80000000 / 256) / 100);
 
+    if(getsw() == 0x2)		//Switch 2
+      PR2 =((80000000 / 256) / 50);
+
+    if(getsw() == 0x1)		//Switch 1
+      PR2 = ((80000000 / 256) / 10);
+  }
 
   	if(button1 & 0x200){ //Button 1
     	switch(bike2_direction){
