@@ -38,7 +38,7 @@ void labinit( void )
   port_E = (volatile int*) 0xbf886110; // Address of PORTE register
 
   *tris_E = *tris_E & 0xffffff00; // To mask out the 8 LSBs
-  *port_E = 0xff; // Set PORTE to 0 so we can see the ticks better
+  *port_E = 0xff; // Set all bits PORTE to 1 so we light up all the LED:s on the IO shield
   TRISFSET = 0x2;
 
   /* Timer from lab 3 */
@@ -66,23 +66,23 @@ void game_init(void){
 /* This code is called repeatedly from mipslabmain */
 void game_loop(void)
 {
-  int switches = getsw();
-	int button = getbtns();
-	int button1 = getbtn1();
+  int switches = getsw();	  //Switches 1-4 are located on PORT registers RD8-RD11
+	int button = getbtns();   //Buttons 2-4 are located on PORT registers RD5-RD7
+	int button1 = getbtn1();  //Button 1 is located on PORT register RF1
 
   //Flip different switches to get faster or slower game speed
 	if(switches = getsw()){
 		if(getsw() == 0x8)  //Switch 4
-      PR2 = ((80000000 / 256) / 100);
+      PR2 = ((80000000 / 256) / 100);	//Sets a period of 3125, very fast
 
 		if(getsw() == 0x4)  //Switch 3
-      PR2 = ((80000000 / 256) / 70);
+      PR2 = ((80000000 / 256) / 70);	//Sets a period of 4464, pretty fast
 
     if(getsw() == 0x2)		//Switch 2
-      PR2 =((80000000 / 256) / 50);
+      PR2 =((80000000 / 256) / 50);		//Sets a period of 6250, standard speed
 
     if(getsw() == 0x1)		//Switch 1
-      PR2 = ((80000000 / 256) / 30);
+      PR2 = ((80000000 / 256) / 30);	//Sets a period of 10417, pretty slow
   }
 
   if(IFS(0) & 0x100){

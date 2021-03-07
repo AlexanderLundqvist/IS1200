@@ -382,12 +382,12 @@ int pow(int base, int exponent){
 void get_score(void){
 	int led;
 	if(bike1_crash == 1){
-		led = pow(2, bike1_score);
-		PORTE = PORTE & ~(led);
+		led = pow(2, bike1_score); //Calculates the binary value of exponents 3-0
+		PORTE = PORTE & ~(led);	//Masks the result and writes it to PORTE to turn off the desired LED
 	}
 	else if(bike2_crash == 1){
-		led = pow(2, bike2_score);
-		PORTE = PORTE & ~(led);
+		led = pow(2, bike2_score); //Calculates the binary value of exponents 7-4
+		PORTE = PORTE & ~(led);	//Masks the result and writes it to PORTE to turn off the desired LED
 	}
 	else
 		return;
