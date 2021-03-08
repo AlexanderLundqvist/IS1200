@@ -330,13 +330,13 @@ char * itoaconv( int num )
 /* ------------------------- Project code goes here ------------------------- */
 
 
-int bike1_x = 0;
-int bike1_y = 0;
-int bike1_direction = 0;
+int bike1_x;
+int bike1_y;
+int bike1_direction;
 
-int bike2_x = 0;
-int bike2_y = 0;
-int bike2_direction = 0;
+int bike2_x;
+int bike2_y;
+int bike2_direction;
 
 char taken[4096];
 
@@ -468,7 +468,7 @@ void player1_update(int direction){
 			}
 			break;
 
-		case 3:
+		case -1:
 			bike1_x--;
 			if(add_taken(bike1_x, bike1_y) == 0){
 				draw_pixel(bike1_x, bike1_y);
@@ -478,7 +478,7 @@ void player1_update(int direction){
 			}
 			break;
 
-		case 4:
+		case -2:
 			bike1_y++;
 			if(add_taken(bike1_x, bike1_y) == 0){
 				draw_pixel(bike1_x, bike1_y);
@@ -514,7 +514,7 @@ void player2_update(int direction){
 			}
 			break;
 
-		case 3:
+		case -1:
 			bike2_x--;
 			if(add_taken(bike2_x, bike2_y) == 0){
 				draw_pixel(bike2_x, bike2_y);
@@ -524,7 +524,7 @@ void player2_update(int direction){
 			}
 			break;
 
-		case 4:
+		case -2:
 			bike2_y++;
 			if(add_taken(bike2_x, bike2_y) == 0){
 				draw_pixel(bike2_x, bike2_y);
@@ -537,15 +537,8 @@ void player2_update(int direction){
 	}
 }
 
+/* Code that checks for player chrash */
 void check_crash(void){
-
-	if(bike1_x == 127 || bike1_x == 0 || bike1_y == 0 || bike1_y == 31){
-		bike1_crash = 1;
-	}
-
-	if(bike2_x == 127 || bike2_x == 0 || bike2_y == 0 || bike2_y == 31){
-		bike2_crash = 1;
-	}
 
 	if(bike1_crash == 1 && bike2_crash == 1){
 		clear_display();
@@ -561,7 +554,7 @@ void check_crash(void){
 		bike1_score--; //Losing player takes a hit
 		get_score();	//Decrease a led-light
 		clear_display();
-		display_string(1, "  PLAYER 1 WON!  ");
+		display_string(1, "  PLAYER 2 WON!  ");
 		display_string(3, "");
 		display_update();
 		quicksleep(15000000);
@@ -574,7 +567,7 @@ void check_crash(void){
 		bike2_score--; //Losing player takes a hit
 		get_score();	//Decrease a led-light
 		clear_display();
-		display_string(1, "  PLAYER 2 WON!  ");
+		display_string(1, "  PLAYER 1 WON!  ");
 		display_string(3, "");
 		display_update();
 		quicksleep(15000000);
@@ -596,7 +589,7 @@ void players_init(void){
 	bike2_x = 126;
 	bike2_y = 15;
 	add_taken(bike2_x, bike2_y);
-	bike2_direction = 3; // Goes to the left initially
+	bike2_direction = -1; // Goes to the left initially
 
 	draw_pixel(bike1_x, bike1_y);
 	draw_pixel(bike2_x, bike2_y);
@@ -605,29 +598,134 @@ void players_init(void){
 }
 
 /*
-	Initialization of the border around the gamefield. The code was initial atempt
-	and is redundant as it could've been implemented with draw_pixel, but it
-	provides an insight in how we draw stuff by manipulating the display array.
+	Initialization of the border around the gamefield. Each pixel drawn is marked
+	in the taken array.
 */
 void border_init(void){
-	int row, column;
-	int r_offset = 0;
-	int c_offset = 0;
 
-	// Draws short sides
-	for(row=0; row <= 4; row++){
-		display[r_offset] = 0;
-		display[127 + r_offset] = 0;
-		r_offset += 128;
+	int x = 0;
+	int y = 0;
+
+	// Draws long sides and marks pixels to taken.
+	for(x = 0; x < 128; x++){
+		draw_pixel(x, y);
+		draw_pixel(x, (y+31));
+		add_taken(x, y);
+		add_taken(x, (y+31));
 	}
 
-	// Draws long sides. From 1 - 126 as they are already drawn.
-	for(column=1; column < 127; column++){
-		display[column] = 254;
-		display[384+column] = 127;
-	}
+	x = 0; // Reset x as it is changed in the first loop.
 
+	// Draws short sides and marks pixels as taken.
+	for(y = 1; y < 31; y++){
+		draw_pixel(x, y);
+		draw_pixel((x+127), y);
+		add_taken(x, y);
+		add_taken((x+127), y);
+	}
 	return;
 }
 
-/* Enemy AI? */
+/* Check if game over. Displays winner then resets game. */
+void check_gameover(void){
+	if(bike1_score < 5){
+		clear_display();
+		display_string(0, "    GAME OVER   ");
+		display_string(1, "P2 won the game!");
+		display_update();
+		quicksleep(10000000);
+		display_string(3, "  Restarting... ");
+		display_update();
+		quicksleep(10000000);
+		labinit();
+		game_init();
+	}
+	else if(bike2_score < 1){
+		clear_display();
+		display_string(0, "   GAME OVER    ");
+		display_string(1, "P1 won the game!");
+		display_update();
+		quicksleep(10000000);
+		display_string(3, "  Restarting... ");
+		display_update();
+		quicksleep(7500000);
+		labinit();
+		game_init();
+	}
+	else
+		return;
+}
+
+/* Enemy AI. Last minute code, did work sometime. Maybe fix it in future... */
+/*
+int rand_index = 0;
+
+int decision(int direction){
+	int decision;
+	while(rando[rand_index] == (direction*(-1))){
+		rand_index++;
+		if(rand_index == 49){
+			rand_index = 0;
+		}
+	}
+	decision = rando[rand_index];
+	return decision;
+}
+
+void enemy_ai(int direction){
+
+	switch(direction){
+		case 1:
+			if(taken[(bike2_y*128)+(bike2_x+1)] == 1){
+				// Try relative left first
+				bike2_direction = -2;
+				// Check relative left
+				if(taken[((bike2_y*128)-1)+(bike2_x)] == 1){
+					bike2_direction = 2;
+				}
+			}
+			else
+				bike2_direction = direction;
+			break;
+
+		case 2:
+			if(taken[((bike2_y*128)+1)+(bike2_x)] == 1){
+				// Try relative left first
+				bike2_direction = 1;
+				// Check relative left
+				if(taken[((bike2_y*128))+(bike2_x+1)] == 1){
+					bike2_direction = -1;
+				}
+			}
+			else
+				bike2_direction = direction;
+			break;
+
+		case -1:
+			if(taken[(bike2_y*128)+(bike2_x-1)] == 1){
+				// Try relative left first
+				bike2_direction = 2;
+				// Check relative left
+				if(taken[((bike2_y*128)+1)+(bike2_x)] == 1){
+					bike2_direction = -2;
+				}
+			}
+			else
+				bike2_direction = direction;
+			break;
+
+		case -2:
+			if(taken[((bike2_y*128)-1)+(bike2_x)] == 1){
+				// Try relative left first
+				bike2_direction = -1;
+				// Check relative left
+				if(taken[((bike2_y*128))+(bike2_x-1)] == 1){
+					bike2_direction = 1;
+				}
+			}
+			else
+				bike2_direction = direction;
+			break;
+	}
+}
+*/

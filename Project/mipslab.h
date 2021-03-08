@@ -71,7 +71,14 @@ void player2_update(int direction);
 void check_crash(void);
 void get_score(void);
 void game_init(void);
+void check_gameover(void);
 
+/* Comment out if bugged */
+/*
+void enemy_ai(int direction);
+int decision(int direction);
+extern int rando[50];
+extern int rand_index; */
 
 /* ----------------------- End of project related code ---------------------- */
 

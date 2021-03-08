@@ -58,7 +58,7 @@ int main(void) {
 
 	/* Introduction */
 	display_init();
-	display_string(0, "    TRON light   ");
+	display_string(0, "       TRON     ");
 	display_string(1, "   By Group 18  ");
 	display_string(2, "");
 	display_string(3, "      Enjoy!    ");

@@ -10,21 +10,17 @@
 #include <pic32mx.h>  /* Declarations of system-specific addresses etc */
 #include "mipslab.h"  /* Declarations for these labs */
 
-#define DISPLAY_WIDTH = 16; // Bytes or 8 bits = 8 pixels
-#define DISPLAY_HEIGHT = 4;
-#define DISPLAY_SIZE = DISPLAY_WIDTH * DISPLAY_HEIGHT;
-
-
 char textstring[] = "text, more text, and even more text!";
 
 volatile int *tris_E;
 volatile int *port_E;
 
+int count = 0;
 int timeoutcount = 0;
 int bike2_score;
 int bike1_score;
-int bike1_crash;			//To not crash player1's bike at the start
-int bike2_crash;			//To not crash player2's bike at the start
+int bike1_crash;
+int bike2_crash;
 
 /* Interrupt Service Routine */
 void user_isr( void )
@@ -41,7 +37,7 @@ void labinit( void )
   *port_E = 0xff; // Set all bits PORTE to 1 so we light up all the LED:s on the IO shield
   TRISFSET = 0x2;
 
-  /* Timer from lab 3 */
+  // Timer from lab 3
   TRISD = TRISD | 0x0fe0;
   T2CON = 0x0;
   T2CONSET = 0x70;
@@ -49,6 +45,15 @@ void labinit( void )
 	PR2 = ((80000000 / 256) / 50);
 	T2CONSET = 0x8000;
 
+  // Sometimes fragments are left so we update the screen.
+  display_string(0, "");
+	display_string(1, "");
+	display_string(2, "");
+	display_string(3, "");
+	display_update();
+
+
+  // Initialize scoring
   bike2_score = 4;
   bike1_score = 8;
 }
@@ -92,22 +97,23 @@ void game_loop(void)
 
   if(timeoutcount == 10){
 
-  	if(button1 & 0x200){ //Button 1
+    /* Player 2 controls */
+    if(button1 & 0x200){ //Button 1
     	switch(bike2_direction){
         case 1:
-          bike2_direction = 4;
+          bike2_direction = -2;
           break;
 
         case 2:
           bike2_direction = 1;
           break;
 
-        case 3:
+        case -1:
           bike2_direction = 2;
           break;
 
-        case 4:
-          bike2_direction = 3;
+        case -2:
+          bike2_direction = -1;
           break;
   	     }
     }
@@ -119,41 +125,41 @@ void game_loop(void)
           break;
 
         case 2:
-          bike2_direction = 3;
+          bike2_direction = -1;
           break;
 
-        case 3:
-          bike2_direction = 4;
+        case -1:
+          bike2_direction = -2;
           break;
 
-        case 4:
+        case -2:
           bike2_direction = 1;
           break;
       }
     }
 
-    if(button & 2){			//Button 3
+    /* Player 1 controls */
+    if(button & 2){	//Button 3
 	    switch(bike1_direction){
         case 1:
-          bike1_direction = 4;
+          bike1_direction = -2;
           break;
 
         case 2:
           bike1_direction = 1;
           break;
 
-        case 3:
+        case -1:
           bike1_direction = 2;
           break;
 
-        case 4:
-          bike1_direction = 3;
+        case -2:
+          bike1_direction = -1;
           break;
       }
     }
 
-    // Button 4
-    if(button & 4){
+    if(button & 4){ // Button 4
       switch(bike1_direction){
 
         case 1:
@@ -161,24 +167,26 @@ void game_loop(void)
           break;
 
         case 2:
-          bike1_direction = 3;
+          bike1_direction = -1;
           break;
 
-        case 3:
-          bike1_direction = 4;
+        case -1:
+          bike1_direction = -2;
           break;
 
-        case 4:
+        case -2:
           bike1_direction = 1;
           break;
 
       }
     }
 
+
     player1_update(bike1_direction);
     player2_update(bike2_direction);
 
     check_crash();
+    check_gameover();
 
     // Update the screen with new information
     display_image(0, display);
